@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -25,6 +29,49 @@ namespace 音乐搜索
         public MainPage()
         {
             this.InitializeComponent();
+        }
+        
+        public class songName
+        {
+            public string Name { get; set; }
+        }
+        public ObservableCollection<songName> list = new ObservableCollection<songName>();
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            
+            string json = await HttpRequest.HttpRequest.QQmusicRequest(SongName.Text);
+            string str = "songname\":\"(?<namelist>\\S+?)\"";
+            int i;
+            if (!System.String.IsNullOrWhiteSpace(json))
+            {
+                try
+                {
+                    MatchCollection match = Regex.Matches(json, str);
+                    for (i = 0; i < match.Count - 1; i++)
+                    {
+                        GroupCollection group = match[i].Groups;
+                        list.Add(new songName { Name = group["namelist"].Value });
+                    }
+                    listView.ItemsSource = list;
+                }
+                catch
+                {
+                    displayNoWifiDialog();
+                }
+            }
+        }
+
+        private async void displayNoWifiDialog()
+        {
+            ContentDialog noWifiDialog = new ContentDialog()
+            {
+                Title = "No wifi connection",
+                Content = "Check connection and try again",
+                PrimaryButtonText = "Ok"
+            };
+
+            ContentDialogResult result = await noWifiDialog.ShowAsync();
         }
     }
 }
