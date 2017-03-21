@@ -7,8 +7,10 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -39,15 +41,14 @@ namespace 音乐搜索
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            
             string json = await HttpRequest.HttpRequest.QQmusicRequest(SongName.Text);
-            string str = "songname\":\"(?<namelist>\\S+?)\"";
+            string reg = "songname\":\"(?<namelist>\\S+?)\"";
             int i;
             if (!System.String.IsNullOrWhiteSpace(json))
             {
                 try
                 {
-                    MatchCollection match = Regex.Matches(json, str);
+                    MatchCollection match = Regex.Matches(json, reg);
                     for (i = 0; i < match.Count - 1; i++)
                     {
                         GroupCollection group = match[i].Groups;

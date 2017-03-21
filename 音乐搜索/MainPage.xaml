@@ -14,8 +14,8 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="50"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBox x:Name="SongName" PlaceholderText="搜索音乐..." VerticalAlignment="Center"></TextBox>
             <Button Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Click="Button_Click">搜索</Button>
