@@ -42,13 +42,13 @@ namespace 音乐搜索
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             string json = await HttpRequest.HttpRequest.QQmusicRequest(SongName.Text);
-            string reg = "songname\":\"(?<namelist>\\S+?)\"";
+            Regex reg =new Regex("songname\":\"(?<namelist>\\S+?)\"");
             int i;
             if (!System.String.IsNullOrWhiteSpace(json))
             {
                 try
                 {
-                    MatchCollection match = Regex.Matches(json, reg);
+                    MatchCollection match =reg.Matches(json);
                     for (i = 0; i < match.Count - 1; i++)
                     {
                         GroupCollection group = match[i].Groups;
@@ -58,21 +58,21 @@ namespace 音乐搜索
                 }
                 catch
                 {
-                    displayNoWifiDialog();
+                    displayerrorDialog();
                 }
             }
         }
 
-        private async void displayNoWifiDialog()
+        private async void displayerrorDialog()
         {
-            ContentDialog noWifiDialog = new ContentDialog()
+            ContentDialog errorDialog = new ContentDialog()
             {
-                Title = "No wifi connection",
-                Content = "Check connection and try again",
-                PrimaryButtonText = "Ok"
+                Title = "错误",
+                Content = "请重试",
+                PrimaryButtonText = "确定"
             };
 
-            ContentDialogResult result = await noWifiDialog.ShowAsync();
+            ContentDialogResult result = await errorDialog.ShowAsync();
         }
     }
 }
